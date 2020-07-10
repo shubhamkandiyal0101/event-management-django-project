@@ -1,0 +1,1 @@
+# event-management-django-project
