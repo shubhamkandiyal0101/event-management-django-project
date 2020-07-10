@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% load static %}
+{% block headernav %}
+{% endblock %}
+{% block footer %}
+{% endblock %}
+{% block title %}
+    <title>EVENT DETAILS</title>
+{% endblock title %}
+
+{% block breadcrumb %}
+
+   <header class="header-area">
+        <div class="classy-nav-container breakpoint-off">
+            <div class="container">
+                <nav class="classy-navbar justify-content-between " id="conferNav">
+                    <h5 style="color: #fff; margin:auto;">
+                        {{event_detail.event_name}}
+                    </h5>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+{% endblock breadcrumb %}
+
+{% block content %}
+
+    <!-- Contact Us Area Start -->
+    <section class="contact--us-area section-padding-100-0">
+        <div class="container">
+            <div class="row">
+                
+                <div class="col-12">
+                    
+                <form style="padding: 35px; border: solid 2px #17a2b8; border-radius: 5px; box-shadow: 1px 1px 4px 3px #17a2b8;">
+                <div class="contact_input_area">
+                    <!-- Form Group -->
+                    <div class="row">
+                        
+                        <div class="form-group col-12 col-lg-12 text-center">
+                            <label class="modified_label">Event Image </label>
+                            <div>
+                                {% if event_detail.image == '' %}
+                                    <img class="img-responsive event_list_img" src="{% static '/assets/img/site-img/no-image-found.jpg' %}" />
+                                {% else %}
+                                    <img class="img-responsive event_list_img" src="{% static '/user_uploads' %}{{event_detail.image}}" />
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Form Group -->
+
+                        <div class="form-group col-12 col-lg-12">
+                            <label class="modified_label">Event Name </label>
+                            <p>{{event_detail.event_name}}</p>
+                        </div>
+
+                        
+                        <!-- Form Group -->
+                        
+                        <div class="form-group col-12 col-lg-12">
+                            <label class="modified_label">Event Short Description </label>
+                            <p>{{event_detail.event_short_desc}}</p>
+                        </div>
+                        
+                        <!-- Form Group -->
+
+                        <div class="form-group col-12">
+                            <label class="modified_label">Event Long Description </label>
+                            <div>
+                                {{event_detail.event_long_desc | safe}}
+                            </div>
+                        </div>
+
+                        <!-- Form Group -->
+
+                        <div class="form-group col-12">
+                            <label class="modified_label">Event Venue (Auditorium / Street No. / Local Area) </label>
+                            <p>{{event_detail.venue}}</p>
+                        </div>
+
+
+                         <!-- Form Group -->
+
+                        <div class="form-group col-12 col-lg-6">
+                            <label class="modified_label">Pincode </label>
+                            <p>{{event_detail.pincode}}</p>
+                        </div>
+
+                        <!-- Form Group -->
+                        <div class="form-group col-12 col-lg-6">
+                            <label class="modified_label">District </label>
+                            <p>{{event_detail.venue_district__district_name}}</p>
+                        </div>
+
+                        <!-- Form Group -->
+                        <div class="form-group col-12 col-lg-6">
+                            <label class="modified_label">Event Start Date Time </label>
+                            <p>{{event_detail.event_start_datetime}}</p>
+                        </div>
+
+                        <!-- Form Group -->
+                        <div class="form-group col-12 col-lg-6">
+                            <label class="modified_label">Event End Date Time </label>
+                            <p>{{event_detail.event_end_datetime}}</p>
+                        </div>
+
+                         <!-- Form Group -->
+                        <div class="form-group col-12 col-md-6">
+                            <label class="modified_label">Ticket Start Date Time </label>
+                            <p>{{event_detail.tkt_start_datetime}}</p>
+                        </div>
+
+                        <!-- Form Group -->
+                        <div class="form-group col-12 col-md-6">
+                            <label class="modified_label">Ticket End Date Time </label>
+                            <p>{{event_detail.tkt_end_datetime}}</p>
+                        </div>
+
+                        <!-- Form Group -->
+                        <div class="form-group col-12 col-md-6">
+                            <label class="modified_label">Total Ticket Quantity </label>
+                            <p>{{event_detail.total_tkt_qty}}</p>
+                        </div>
+
+                        <!-- Form Group -->
+                        <div class="form-group col-12 col-md-6">
+                            <label class="modified_label">Ticket Price </label>
+                            <p>{{event_detail.tkt_price}}</p>    
+                        </div>
+
+                        <!-- Form Group -->
+                        <div class="form-group col-12 col-md-6">
+                            <label class="modified_label">Total Ticket Sales </label>
+                            <p>{{event_detail.total_tkt_sales}}</p>
+                        </div>
+
+                        <!-- Form Group -->
+
+                    </div>
+                </div>
+            </form>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!-- Contact Us Area End -->
+
+{% endblock content %}
+
+{% block extra_js %}
+<script src="{% static '/controller/common/common-regex.js' %}"></script>
+<script src="{% static '/controller/common/web-common.js' %}"></script>
+{% endblock extra_js %}

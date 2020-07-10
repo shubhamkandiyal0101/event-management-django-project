@@ -1,0 +1,187 @@
+{% extends "attendee_base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Event's List | Organizer Dashboard</title>
+{% endblock title %}
+
+{% block breadcrumb_heading1 %}
+    Event's List
+{% endblock breadcrumb_heading1 %}
+
+{% block breadcrumb_heading2 %}
+    Event's List
+{% endblock breadcrumb_heading2 %}
+
+{% block content %}
+
+
+    <section class="contact--us-area section-padding-20-80">
+
+        <!-- list event -->
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-4">
+                    <h2>EVENT'S LIST <i class="zmdi zmdi-search-in-file"></i> </h2>
+                </div>
+                <div class="col-8">
+                    {% if page_number > 1 %}
+                        <a href="{% url 'attendee_site:event-list' prev_page_num %}"><button class="btn btn-primary">Previous Page</button></a>
+                    {% endif %}
+                    {% if remaining_event_count > 0 %}
+                        <a href="{% url 'attendee_site:event-list' next_page_num %}"><button class="btn btn-primary">Next Page</button></a>
+                    {% endif %}
+                    
+                </div>
+
+            </div>
+
+            <!-- block for show list of all element -->
+            {% for active_event in active_event_details %}
+            <div class="row event_list_row">
+                <div class="col-3 text-center">
+                    {% if active_event.image == '' %}
+                        <img class="img-responsive event_list_img" src="{% static '/assets/img/site-img/no-image-found.jpg' %}" style="margin-top: 28px;" />
+                    {% else %}
+                        <img class="img-responsive event_list_img" src="{% static '/user_uploads' %}{{active_event.image}}" style="margin-top: 28px;" />
+                    {% endif %}
+                </div>
+                
+                <div class="col-9">
+                    <h5 style="color:#007bff; text-align: center;">{{active_event.event_name}}</h5>
+                    <div class="row" style="text-align: center; background: black; color: white; padding: 6px; font-size: 16px; font-family: sans-serif;">
+                        <div class="col-3">
+                            <b>Event Start Date</b>
+                            <br/>
+                            {{active_event.event_start_datetime}}
+                        </div>
+                        <div class="col-3">
+                            <b>Event End Date</b>
+                            <br/>
+                            {{active_event.event_end_datetime}}
+                        </div>
+                        <div class="col-3">
+                            <b>Ticket Start Date</b>
+                            <br/>
+                            {{active_event.tkt_start_datetime}}
+                        </div>
+                        <div class="col-3">
+                            <b>Ticket End Date</b>
+                            <br/>
+                            {{active_event.tkt_end_datetime}}
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <b>Ticket Price (INR)</b>
+                            <br/>
+                            {{active_event.tkt_price}}
+                        </div>
+                        <div class="col-6">
+                            <b>Total Ticket Sales</b>
+                            <br/>
+                            {{active_event.total_tkt_sales}}
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <a href="{% url 'view-event-details' active_event.id %}" target="_blank"><button class="btn confer-btn ml-2">VIEW DETAILS <i class="zmdi zmdi-eye"></i></button></a>
+                        {% if active_event.total_tkt_sales <= active_event.total_tkt_qty %}
+                            <a href="{% url 'attendee_site:buy-ticket' active_event.id %}" target="_blank"><button class="btn confer-btn ml-2">BUY TICKET </button></a>
+                        {% endif %}
+                    </div>
+                    {% if active_event.total_tkt_sales > active_event.total_tkt_qty %}
+                        <small style="color: red;">All Tickets of this Event is Already Soled Out.</small>
+                    {% endif %}
+
+
+                </div>
+
+
+            </div>
+            {% endfor %}
+            <!-- ends here ~ block for show list of all element -->
+            
+
+        </div>
+        <!-- ends here ~ list event -->
+
+    </section>
+
+
+{% endblock content %}
+
+
+<!-- extra js block -->
+{% block extra_js %}
+    
+   <script src="{% static '/controller/common/common-regex.js' %}"></script>
+   <script src="{% static '/controller/common/web-common.js' %}"></script>
+   <script type="text/javascript">
+        function deleteEventFn(event_id) {
+            Swal.fire({
+              title: 'Are you sure?',
+              text: "You won't be able to revert this!",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+              if (result.value) {
+                // Swal.fire(
+                //   'Deleted!',
+                //   'Your file has been deleted.',
+                //   'success'
+                // )
+
+                // ajax call
+                 $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: `/organizer/delete-event`,
+                    data: JSON.stringify({'event_id':event_id}),
+                    success: function(resp) {
+                        // $('#show-loading-modal').modal('hide');
+                        let response = resp;
+                        // code block works if responseType is success
+                        if(response.responseType == 'success') {
+                            if(response.messageType == 'success') {
+                                // show sweetAlert box
+                                Swal.fire({
+                                  icon: 'success',
+                                  title: response.message,
+                                  showConfirmButton: true,
+                                })
+                                // ends here ~ show sweetAlert box
+                                // toastr.success(response.message,'Success');
+                                if(response.isRedirectNext == true) {
+                                    window.location.href = response.nextPageUrl;
+                                }
+                            } else if(response.messageType == 'error') {
+                                // show sweetAlert box
+                                Swal.fire({
+                                  icon: 'error',
+                                  title: response.message,
+                                  showConfirmButton: true,
+                                })
+                                // ends here ~ show sweetAlert box
+                                // toastr.error(response.message,'Error');
+                            }
+                        }
+                        // ends here ~ code block works if responseType is success
+                    }
+                });
+
+                // ends here ~ ajax call
+
+              }
+            })
+        }
+   </script>
+
+
+{% endblock extra_js %}
+<!-- ends here ~ extra js block -->
+

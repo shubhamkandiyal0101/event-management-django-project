@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>USER LOGIN</title>
+{% endblock title %}
+
+{% block breadcrumb %}
+
+    <!-- Breadcrumb Area Start -->
+    <section class="breadcrumb-area bg-img bg-gradient-overlay jarallax" style="background-image: url(img/bg-img/37.jpg);">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12">
+                    <div class="breadcrumb-content">
+                        <h2 class="page-title">Login</h2>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Login</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Area End -->
+
+{% endblock breadcrumb %}
+
+{% block content %}
+
+    <!-- Contact Us Area Start -->
+    <section class="contact--us-area section-padding-100-0">
+        <div class="container">
+            <div class="row">
+                
+                <div class="col-12" id="show-login-form-div">
+                    
+                    <!-- login form -->
+                     <form id="user_login" style="padding: 10px 100px 100px 100px;" autocomplete="off">
+                        <div class="contact_input_area">
+
+
+                             <div class="row">
+                                <h4 style="font-family: serif;color: #17a2b8;text-transform: capitalize;">USER LOGIN FORM</h4 >
+                            </div>
+                            <!-- Form Group -->
+                            <div class="row">
+                               
+                                <div class="form-group col-12">
+                                    <input type="email" class="form-control mb-30" name="email" id="email" placeholder="E-mail" required>
+                                    <div></div>
+
+                                </div>
+
+                                <!-- Form Group -->
+
+                                <div class="form-group col-12 col-lg-6">
+                                    <input type="password" class="form-control mb-30" name="password" placeholder="Password">
+                                    <div></div>
+                                </div>
+
+                                <!-- Form Group -->
+                                <div class="form-group col-12 col-lg-6">
+                                    <select class="form-control mb-30" name="user_type">
+                                        <option value=""> -- LOGIN USER TYPE -- </option>
+                                        <option value="organizer">LOGIN AS ORGRANIZER</option>
+                                        <option value="attendee">LOGIN FOR BOOK EVENT</option>
+                                    </select>
+                                     <div></div>
+                                </div>
+
+                               
+                                <!-- Button -->
+                                <div class="col-12">
+                                    <span type="submit" class="btn confer-btn" onclick="loginUser()">LOGIN <i class="zmdi zmdi-long-arrow-right"></i></span>
+                                    <span type="submit" class="btn confer-btn" onclick="toggleLoginFormDiv()">FORGOTTEN PASSWORD? <i class="zmdi zmdi-long-arrow-right"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- ends here ~ sign up -->
+
+                </div>
+
+                <!-- form block for forgot password -->
+                 <div class="col-12" id="show-forgot-pswd-form-div" style="display: none;">
+                    <!-- login form -->
+                     <form id="forgot-password-form" style="padding: 10px 100px 100px 100px;" autocomplete="off">
+                        <div class="contact_input_area">
+                            <!-- Form Group -->
+                            <div class="row">
+                                <h4 style="font-family: serif;color: #17a2b8;text-transform: capitalize;">FORGOT PASSWORD</h4 >
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-12">
+                                    <input type="email" class="form-control mb-30" name="forgotUserEmail" id="email" placeholder="E-mail" required>
+                                    <div></div>
+
+                                </div>
+
+                                <!-- Button -->
+                                <div class="col-12">
+                                    <span type="submit" class="btn confer-btn" onclick="userForgotPswdForm()">Forgot Password <i class="zmdi zmdi-long-arrow-right"></i></span>
+                                   <span type="submit" class="btn confer-btn" onclick="toggleLoginFormDiv()">BACK TO LOGIN <i class="zmdi zmdi-long-arrow-right"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- ends here ~ sign up -->
+
+                </div>
+                <!-- ends here ~ form block for forgot password -->
+
+            </div>
+        </div>
+    </section>
+    <!-- Contact Us Area End -->
+
+{% endblock content %}
+{% block loading-modal %}
+    {% include 'loading-modal.html' %}
+{% endblock loading-modal %}
+{% block extra_js %}
+<script src="{% static '/controller/common/common-regex.js' %}"></script>
+<script src="{% static '/controller/common/web-common.js' %}"></script>
+<script type="text/javascript" src="{% static 'controller/login.js' %}"></script>
+{% endblock extra_js %}

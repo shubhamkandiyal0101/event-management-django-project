@@ -1,0 +1,174 @@
+{% extends "attendee_base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Attendee Dashboard</title>
+{% endblock title %}
+
+{% block breadcrumb_heading1 %}
+    Dashboard
+{% endblock breadcrumb_heading1 %}
+
+{% block breadcrumb_heading2 %}
+    Dashboard
+{% endblock breadcrumb_heading2 %}
+
+{% block content %}
+
+
+    <section class="contact--us-area section-padding-20-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-3">
+                    <a href="{% url 'attendee_site:event-list' 1 %}"><button class="btn confer-gb-btn">Event's List / Search Event's</button></a>
+                </div>
+                <div class="col-3">
+                </div>
+            </div>
+        </div>
+
+        <!-- section stats -->
+        <div class="container mt-5">
+            <div class="row">
+                <h2>ATTENDEE STATS <i class="zmdi zmdi-graphic-eq"></i> </h2>
+            </div>
+
+            <!-- mini stats section -->
+            <div class="row mt-2 text-center" style="background: #17a2b826; border: solid #17a2b8;">
+                <div class="col-3 pt-2">
+                    <label class="modified_label">Total Event Enroll</label>
+                    <p>{{enroll_evt_count}}</p>
+                </div>
+                <div class="col-3 pt-2" style="border-left: solid #17a2b8">
+                    <label class="modified_label">Upcoming Event Count</label>
+                    <p>{{upcoming_evt_enroll_count}}</p>
+                </div>
+                <div class="col-3 pt-2" style="border-left: solid #17a2b8">
+                    <label class="modified_label">Expired Event Count</label>
+                    <p>{{expired_evt_enroll_count}}</p>
+                </div>
+                <div class="col-3 pt-2" style="border-left: solid #17a2b8">
+                    <label class="modified_label">Withdraw Event Count </label>
+                    <p>{{cancelled_evt_count}}</p>
+                </div>
+
+            </div>
+            <!-- ends here ~ mini stats section -->
+
+            <!-- list of upcoming events -->
+
+            <div class="row pt-5">
+                <h4>UPCOMING EVENT LIST</h4>
+            </div>
+
+            {% for upcoming_event in upcoming_event_details %}
+            <div class="row event_list_row">
+                <div class="col-3 text-center">
+                    {% if upcoming_event.image == '' %}
+                        <img class="img-responsive event_list_img" src="{% static '/assets/img/site-img/no-image-found.jpg' %}" style="margin-top: 28px;" />
+                    {% else %}
+                        <img class="img-responsive event_list_img" src="{% static '/user_uploads' %}{{upcoming_event.image}}" style="margin-top: 28px;" />
+                    {% endif %}
+                </div>
+                
+                <div class="col-9">
+                    <h5 style="color:#007bff; text-align: center;">{{upcoming_event.event_name}}</h5>
+                    <div class="row" style="text-align: center; background: black; color: white; padding: 6px; font-size: 16px; font-family: sans-serif;">
+                        <div class="col-3">
+                            <b>Event Start Date</b>
+                            <br/>
+                            {{upcoming_event.event_start_datetime}}
+                        </div>
+                        <div class="col-3">
+                            <b>Event End Date</b>
+                            <br/>
+                            {{upcoming_event.event_end_datetime}}
+                        </div>
+                        <div class="col-3">
+                            <b>Ticket Start Date</b>
+                            <br/>
+                            {{upcoming_event.tkt_start_datetime}}
+                        </div>
+                        <div class="col-3">
+                            <b>Ticket End Date</b>
+                            <br/>
+                            {{upcoming_event.tkt_end_datetime}}
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <b>Ticket Price (INR)</b>
+                            <br/>
+                            {{upcoming_event.tkt_price}}
+                        </div>
+                        <div class="col-6">
+                            <b>Total Ticket Sales</b>
+                            <br/>
+                            {{upcoming_event.total_tkt_sales}}
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <a href="{% url 'view-event-details' upcoming_event.id %}" target="_blank"><button class="btn confer-btn ml-2">VIEW DETAILS <i class="zmdi zmdi-eye"></i></button></a>
+
+                        {% if upcoming_event.id not in pending_cb_id_rec_list %}
+                        <a target="_blank"><button class="btn confer-btn ml-2" onclick="cancelEnrollment({{upcoming_event.id}})">CANCEL ENROLLMENT <i class="zmdi zmdi-close-circle"></i></button></a>
+                        {% endif %}
+                       
+                    </div>
+                    {% if upcoming_event.id not in pending_cb_id_rec_list %}
+                        <small style="color: red;">If You don't want to Attend this Event then You can Ask for 50% Money Back by Clicking <b>"Cancel Enrollment"</b> button.</small>
+                    {% else %}
+                        <small style="color: red;">Your Request for <b>"Cancel Enrollment"</b> is Pending with Organizer. You will recieve an email if Organizer approve your request.</small>
+                    {% endif %}
+                </div>
+
+
+            </div>
+            {% endfor %}
+            <!-- ends here ~ list of upcoming events -->
+
+        </div>
+        <!-- ends here ~ section stats -->
+
+    </section>
+
+
+{% endblock content %}
+
+{% block extra_js %}
+<script src="{% static '/controller/common/common-regex.js' %}"></script>
+<script src="{% static '/controller/common/web-common.js' %}"></script>
+<script type="text/javascript">
+    function cancelEnrollment(event_id) {
+        // ajax call to request OTP
+        let ajaxData = {'event_id':event_id};
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: `/attendee/cancel-enrollment/${event_id}`,
+            data: JSON.stringify(ajaxData),
+            success: function(resp) {
+                // $("#global-loading-modal").hide('modal');
+                let response = resp;
+                // code block works if responseType is success
+                if(response.responseType == 'success') {
+                    if(response.messageType == 'success') {
+                        toastr.success(response.message,'Success');
+                        if(response.isRedirectNext == true) {
+                            window.location.href = response.nextPageUrl;
+                        }
+                    } else if(response.messageType == 'error') {
+                        toastr.error(response.message,'Error');
+                    } else if(response.messageType == 'info') {
+                        toastr.info(response.message,'Info');
+                    }
+                }
+                // ends here ~ code block works if responseType is success
+            }
+        });
+        // ends here ~ ajax call to request OTP
+    }
+</script>
+{% endblock extra_js %}

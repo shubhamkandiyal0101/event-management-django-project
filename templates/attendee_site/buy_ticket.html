@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% load static %}
+{% block headernav %}
+{% endblock %}
+{% block footer %}
+{% endblock %}
+{% block title %}
+    <title>EVENT DETAILS</title>
+{% endblock title %}
+
+{% block breadcrumb %}
+
+   <header class="header-area">
+        <div class="classy-nav-container breakpoint-off">
+            <div class="container" style="padding-top: 30px; text-align: center;">
+                    <h4 style="color: #fff; margin:auto;">
+                        {{event_detail.event_name}}
+                    </h4>
+                    <p style="color: #fff; font-weight: bold;">( {{event_detail.venue}} - {{event_detail.pincode}} )</p>
+
+
+            </div>
+        </div>
+    </header>
+
+{% endblock breadcrumb %}
+
+{% block content %}
+
+    <!-- Contact Us Area Start -->
+    <section class="contact--us-area section-padding-100-0">
+        <div class="container">
+            <div class="row pt-5">
+                <div class="col-3">
+                       {% if event_detail.image == '' %}
+                            <img class="img-responsive event_list_img" src="{% static '/assets/img/site-img/no-image-found.jpg' %}" />
+                        {% else %}
+                            <img class="img-responsive event_list_img" src="{% static '/user_uploads' %}{{event_detail.image}}" />
+                        {% endif %}                  
+                </div>
+                <div class="col-9">
+
+                    <div class="row">
+                        <div class="col-6">
+                            <h4>Total Amount: <span id="totalTktAmt">0</span> INR</h4>
+                        </div>
+                        <div class="col-6">
+                            <h4>Ticket Quantity: <span id="totalTktQty">0</span></h4>
+                        </div>
+                    </div>
+
+                    <div class="row" style="background: #17a2b826; border: solid #17a2b8;">
+
+                        <div class="col-6">
+                            <label class="modified_label">Ticket Price </label>
+                            <p>{{event_detail.tkt_price}}</p>
+                        </div>
+                        <div class="col-6" style="border-left: solid #17a2b8">
+                            <label class="modified_label">Remaining Ticket QTY </label>
+                            <p>{{tkt_qty_left}}</p>
+                        </div>
+
+                    </div>
+
+                    <select class="form-control mt-30" id="tktQty">
+                        <option value="0"> -- SELECT TICKET QUANTITY -- </option>
+                    </select>
+                      
+                </div>
+            </div>
+            <div class="row pt-5">
+                <button class="btn btn-info" style="margin: auto;" onclick="buyTktFn('{{event_id}}')">PROCEED TO CHECKOUT</button>
+            </div>
+        </div>
+    </section>
+    <!-- Contact Us Area End -->
+
+{% endblock content %}
+
+{% block extra_js %}
+<script src="{% static '/controller/common/common-regex.js' %}"></script>
+<script src="{% static '/controller/common/web-common.js' %}"></script>
+    
+<script type="text/javascript">
+    // initital ticket qty left val
+    let tktQtyLeft = {{tkt_qty_left}};
+    // ends here ~ initital ticket qty left val
+
+    // append tkt option val 
+    if(tktQtyLeft >= 4) {
+        // for loop
+        for(let i=1; i<=4; i++) {
+            $("#tktQty").append(`<option value="${i}">${i}</option>`);
+        }
+        // ends here ~ for loop
+    } else {
+        // for loop
+        for(let i=1; i<=tktQtyLeft; i++) {
+            $("#tktQty").append(`<option value="${i}">${i}</option>`);
+        }
+        // ends here ~ for loop
+    }
+    // ends here ~ append tkt option val
+
+    // change ticket price on change tkt qty
+    $('#tktQty').on('change', function() {
+        $("#totalTktAmt").text({{event_detail.tkt_price}}*this.value);
+        $('#totalTktQty').text(this.value);
+    });
+    // ends here ~ change ticket price on change tkt qty
+
+    // buy ticket function
+    function buyTktFn(event_id) {
+        let selTktQty = $("#tktQty").val();
+
+        if(selTktQty == 0) {
+            return toastr.error('Ticket Quantity must be 1 or Greater than 1','Error');
+        }
+
+        // ajax call to request OTP
+        let ajaxData = {'ticketQty':selTktQty,'event_id':event_id};
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: `/attendee/buy-ticket/${event_id}`,
+            data: JSON.stringify(ajaxData),
+            success: function(resp) {
+                // $("#global-loading-modal").hide('modal');
+                let response = resp;
+                // code block works if responseType is success
+                if(response.responseType == 'success') {
+                    if(response.messageType == 'success') {
+                        toastr.success(response.message,'Success');
+                        if(response.isRedirectNext == true) {
+                            window.location.href = response.nextPageUrl;
+                        }
+                    } else if(response.messageType == 'error') {
+                        toastr.error(response.message,'Error');
+                    } else if(response.messageType == 'info') {
+                        toastr.info(response.message,'Info');
+                    }
+                }
+                // ends here ~ code block works if responseType is success
+            }
+        });
+        // ends here ~ ajax call to request OTP
+    }
+    // ends here ~ buy ticket function
+
+</script>
+
+{% endblock extra_js %}

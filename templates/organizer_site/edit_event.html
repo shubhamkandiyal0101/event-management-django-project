@@ -1,0 +1,304 @@
+{% extends "organizer_base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Edit Event | Organizer Dashboard</title>
+{% endblock title %}
+
+{% block breadcrumb_heading1 %}
+    Edit Event
+{% endblock breadcrumb_heading1 %}
+
+{% block breadcrumb_heading2 %}
+    Edit Event
+{% endblock breadcrumb_heading2 %}
+
+{% block content %}
+
+
+    <section class="contact--us-area section-padding-20-80">
+
+        <!-- Edit Event -->
+        <div class="container mt-5">
+            <div class="row">
+                <h2>Edit Event <i class="zmdi zmdi-calendar"></i> </h2>
+            </div>
+
+            <!-- form for Edit Event -->
+            <form id="add_edit_event" style="padding: 35px; border: solid 2px #17a2b8; border-radius: 5px; box-shadow: 1px 1px 4px 3px #17a2b8;" autocomplete="off">
+                <div class="contact_input_area">
+                    <!-- Form Group -->
+                    <div class="row">
+                        <div class="form-group col-12 col-lg-12">
+                            <label class="modified_label">Event Name *</label>
+                            <input type="text" class="form-control mb-30" name="event_name" placeholder="Event Name" value="{{event_detail.event_name | safe}}" required>
+                            <div></div>
+                        </div>
+                        
+                        <!-- Form Group -->
+                        
+                        <div class="form-group col-12 col-lg-12">
+                            <label class="modified_label">Event Short Description *</label>
+                            <textarea class="form-control mb-30" name="event_short_desc" placeholder="Here Go Short Description of Event" style="resize: none;">{{event_detail.event_short_desc | safe}}</textarea>
+                            <div></div>
+                        </div>
+                        
+                        <!-- Form Group -->
+
+                        <div class="form-group col-12">
+                            <label class="modified_label">Event Long Description *</label>
+                            <textarea name="event_long_desc" style="width: 100%;">
+                                {{event_long_desc | safe}}                            
+                            </textarea>
+                            <div class="custom_has_error" id="event_long_desc_err_div" style="display: none;"></div>
+                        </div>
+
+                        <!-- Form Group -->
+
+                        <div class="form-group col-12">
+                            <label class="modified_label">Event Venue (Auditorium / Street No. / Local Area) *</label>
+                            <input type="text" class="form-control mb-30" name="venue" value="{{event_detail.venue | safe}}"  placeholder="Auditorium Complex IGMC Shimla, Lakkar Bazar" required>
+                            <div></div>
+                        </div>
+
+
+                         <!-- Form Group -->
+
+                        <div class="form-group col-12 col-lg-6">
+                            <label class="modified_label">Pincode *</label>
+                            <input type="number" class="form-control mb-30" name="pincode" placeholder="171001" maxlength="6" value="{{event_detail.pincode | safe}}" required>
+                             <div></div>
+                        </div>
+
+                        <!-- Form Group -->
+                        <div class="form-group col-12 col-lg-6">
+                            <label class="modified_label">District *</label>
+
+                            <select class="form-control mb-30" name="venue_district">
+                                <option value=""> -- SELECT DISTRICT -- {{event_detail.venue_district}} </option>
+                                {% for district in himachal_district_list %}
+                                    {% if event_detail.venue_district_id == district.id %}
+                                        <option value="{{district.id}}" selected="">{{district.district_name}}</option>
+                                    {% else %}
+                                        <option value="{{district.id}}">{{district.district_name}}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                             <div></div>
+                        </div>
+
+                        <!-- Form Group -->
+                        <div class="form-group col-12 col-lg-6">
+                            <label class="modified_label">Event Start Date Time *</label>
+
+                            <div class='input-group date' id='event_start_datetime_id' style="margin-bottom: 30px;">
+                                <input type='text' class="form-control" name="event_start_datetime" />
+                                <span class="input-group-addon">
+                                    <span class="fa fa-calendar"></span>
+                                </span>
+                            </div>
+
+                            <div id="event_start_datetime_err"></div>
+                        </div>
+
+                        <!-- Form Group -->
+                        <div class="form-group col-12 col-lg-6">
+                            <label class="modified_label">Event End Date Time *</label>
+
+                            <div class='input-group date' id='event_end_datetime_id' style="margin-bottom: 30px;">
+                                <input type='text' class="form-control" name="event_end_datetime" />
+                                <span class="input-group-addon">
+                                    <span class="fa fa-calendar"></span>
+                                </span>
+                            </div>
+
+                            <div id="event_end_datetime_err"></div>
+                        </div>
+
+                         <!-- Form Group -->
+                        <div class="form-group col-12 col-md-6">
+                            <label class="modified_label">Ticket Start Date Time *</label>
+
+                            <div class='input-group date' id='tkt_start_datetime_id' style="margin-bottom: 30px;">
+                                <input type='text' class="form-control" name="tkt_start_datetime" />
+                                <span class="input-group-addon">
+                                    <span class="fa fa-calendar"></span>
+                                </span>
+                            </div>
+
+                             <div id="tkt_start_datetime_err"></div>
+                        </div>
+
+                        <!-- Form Group -->
+                        <div class="form-group col-12 col-md-6">
+                            <label class="modified_label">Ticket End Date Time *</label>
+
+                            <div class='input-group date' id='tkt_end_datetime_id' style="margin-bottom: 30px;">
+                                <input type='text' class="form-control" name="tkt_end_datetime" />
+                                <span class="input-group-addon">
+                                    <span class="fa fa-calendar"></span>
+                                </span>
+                            </div>
+
+                             <div id="tkt_end_datetime_err"></div>
+                        </div>
+
+                        <!-- Form Group -->
+                        <div class="form-group col-12 col-md-6">
+                            <label class="modified_label">Total Ticket Quantity *</label>
+                            <input type="number" class="form-control mb-30" name="total_tkt_qty" placeholder="50" maxlength="4" value="{{event_detail.total_tkt_qty | safe}}" required>
+                             <div></div>
+                        </div>
+
+                        <!-- Form Group -->
+                        <div class="form-group col-12 col-md-6">
+                            <label class="modified_label">Ticket Price *</label>
+                            <input type="number" class="form-control mb-30" name="tkt_price" value="{{event_detail.tkt_price | safe}}" placeholder="100" maxlength="3" required>
+                             <div></div>
+                        </div>
+
+
+
+                        <!-- Button -->
+                        <div class="col-12">
+                            <span type="submit" class="btn confer-btn" onclick="updateEventFn('{{event_detail.id | safe}}')"> UPDATE EVENT <i class="zmdi zmdi-long-arrow-right"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!-- ends here ~ form for Edit Event -->
+
+        </div>
+        <!-- ends here ~ Edit Event -->
+
+    </section>
+
+
+{% endblock content %}
+
+
+<!-- extra js block -->
+{% block extra_js %}
+
+
+
+    <script type="text/javascript" src="{% static 'assets/ckeditor/ckeditor/ckeditor.js' %}"></script>
+
+    <!-- local js code -->
+    <script type="text/javascript">
+
+        // ckeditor settings     
+        CKEDITOR.config.toolbar = [
+           ['Styles','Format','Font','FontSize','Bold','Italic','Underline','StrikeThrough','-','Undo','Redo','-','Cut','Copy','Paste','Find','Replace','-','Outdent','Indent','-','NumberedList','BulletedList','-','JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock','Link','TextColor','BGColor']
+        ] ; 
+        // ckeditor settings
+        
+    </script>
+    <!-- ends here ~ local js code -->
+
+   <script src="{% static '/controller/common/common-regex.js' %}"></script>
+   <script src="{% static '/controller/common/web-common.js' %}"></script>
+   <script type="text/javascript" src="{% static 'controller/edit_event.js' %}"></script>
+
+    <script type="text/javascript">
+        function setMinDateEndDtField(evt, field, addHour) {
+            let dt = new Date(evt.date._d);
+            dt.setHours(dt.getHours() + addHour);
+            $(field).data("DateTimePicker").minDate(dt)
+        }
+
+        function setMaxDateEndDtField(evt, field, queryType, totalHourOrDays) {
+
+            let dt = new Date(evt.date._d);
+
+            if(queryType == 'addHour') {
+                dt.setHours(dt.getHours() + totalHourOrDays);
+            } else if(queryType == 'subtractHour'){
+                dt.setHours(dt.getHours() - totalHourOrDays);
+            }  else if(queryType == 'addDays'){
+                dt.setDate(dt.getDate() + totalHourOrDays);
+            } else if(queryType == 'subtractDays'){
+                dt.setDate(dt.getDate() - totalHourOrDays);
+            }
+
+            $(field).data("DateTimePicker").maxDate(dt)
+        }
+
+      
+
+            // ----------------------------------------
+            // code blocks work in "add-event" mode
+            // ----------------------------------------
+
+
+            // for event start data time
+            $('#event_start_datetime_id').datetimepicker({
+                format: 'DD-MM-YYYY hh:mm A',
+                icons: datetimePickerIcons,
+                minDate: new Date(),
+            }).on('dp.change',function(evt){
+                setMinDateEndDtField(evt,'#event_end_datetime_id', 1)
+                setMinDateEndDtField(evt,'#tkt_start_datetime_id', 0)
+                setMinDateEndDtField(evt,'#tkt_end_datetime_id', 0)
+                setMaxDateEndDtField(evt, '#event_end_datetime_id', 'addDays', 30);
+                setMaxDateEndDtField(evt, '#event_start_datetime_id', 'addDays', 29);
+            });
+            // ends here ~ for event start data time
+
+            // for event end data time
+            $('#event_end_datetime_id').datetimepicker({
+                format: 'DD-MM-YYYY hh:mm A',
+                icons: datetimePickerIcons,
+                minDate: new Date()
+            }).on('dp.change',function(evt){
+               setMaxDateEndDtField(evt, '#tkt_end_datetime_id', 'addHour', 0);
+               setMaxDateEndDtField(evt, '#tkt_start_datetime_id', 'addHour', 0);
+
+            });
+            // ends here ~ for event end data time
+
+            // for ticket start date time
+            $('#tkt_start_datetime_id').datetimepicker({
+                format: 'DD-MM-YYYY hh:mm A',
+                icons: datetimePickerIcons,
+                minDate: new Date(),
+            }).on('dp.change',function(evt){
+                setMinDateEndDtField(evt,'#tkt_end_datetime_id', 1)
+            });
+            // ends here ~ for ticket start date time
+
+            // for ticket end date time
+            $('#tkt_end_datetime_id').datetimepicker({
+                format: 'DD-MM-YYYY hh:mm A',
+                icons: datetimePickerIcons,
+                minDate: new Date()
+            });
+            // ends here ~ for ticket end date time
+
+            // change date time picker val on load
+            $('#event_start_datetime_id').data("DateTimePicker").date(new Date('{{event_detail.event_start_datetime | date:"Y-m-d H:m:s" }}'));
+            $('#event_end_datetime_id').data("DateTimePicker").date(new Date('{{event_detail.event_end_datetime | date:"Y-m-d H:m:s" }}'));
+            $('#tkt_start_datetime_id').data("DateTimePicker").date(new Date('{{event_detail.tkt_start_datetime | date:"Y-m-d H:m:s" }}'));
+            $('#tkt_end_datetime_id').data("DateTimePicker").date(new Date('{{event_detail.tkt_end_datetime | date:"Y-m-d H:m:s" }}'));
+            // ends here ~ change date time picker val on load
+
+
+            // set date time on load
+             // $("#event_start_datetime_id").data("DateTimePicker").setDate(new Date('{{event_detail.event_start_datetime | date:"Y-m-d H:m:s" }}'))
+
+             // console.log(new Date('{{event_detail.event_start_datetime | date:"d-m-Y h:i A" }}'))
+             // console.log(dateStr,' >> ', new Date('{{event_detail.event_start_datetime | date:"Y-m-d H:m:s" }}'))
+            // ends here ~ set date time on load
+
+            
+            // ---------------------------------------------------
+            // ends here ~ code blocks work in "add-event" mode
+            // ---------------------------------------------------
+
+       
+    </script>
+
+
+{% endblock extra_js %}
+<!-- ends here ~ extra js block -->
+

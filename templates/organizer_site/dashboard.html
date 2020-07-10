@@ -1,0 +1,137 @@
+{% extends "organizer_base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Organizer Dashboard</title>
+{% endblock title %}
+
+{% block breadcrumb_heading1 %}
+    Dashboard
+{% endblock breadcrumb_heading1 %}
+
+{% block breadcrumb_heading2 %}
+    Dashboard
+{% endblock breadcrumb_heading2 %}
+
+{% block content %}
+
+
+    <section class="contact--us-area section-padding-20-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-3">
+                    <a href="{% url 'organizer_site:add-event' %}"><button class="btn confer-gb-btn">Add Event</button></a>
+                </div>
+                <div class="col-3">
+                     <a href="{% url 'organizer_site:list-event' %}"><button class="btn confer-gb-btn">List of Event's</button></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- section stats -->
+        <div class="container mt-5">
+            <div class="row">
+                <h2>ORGANIZER STATS <i class="zmdi zmdi-graphic-eq"></i> </h2>
+            </div>
+
+            <!-- mini stats section -->
+            <div class="row mt-2 text-center" style="background: #17a2b826; border: solid #17a2b8;">
+                <div class="col-3 pt-2">
+                    <label class="modified_label">Total Event Created</label>
+                    <p>{{total_event_count}}</p>
+                </div>
+                <div class="col-3 pt-2" style="border-left: solid #17a2b8">
+                    <label class="modified_label">Upcoming Event Count</label>
+                    <p>{{upcoming_event_count}}</p>
+                </div>
+                <div class="col-3 pt-2" style="border-left: solid #17a2b8">
+                    <label class="modified_label">Expired Event Count</label>
+                    <p>{{expire_event_count}}</p>
+                </div>
+                <div class="col-3 pt-2" style="border-left: solid #17a2b8">
+                    <label class="modified_label">CANCELLED REQUEST COUNT </label>
+                    <p>{{cancel_req_count}}</p>
+                </div>
+
+            </div>
+            <!-- ends here ~ mini stats section -->
+
+            <!-- list of upcoming events -->
+
+            <div class="row pt-5">
+                <h4>REQUEST FOR CANCEL ENROLLMENT FROM EVENT</h4>
+            </div>
+
+            {% for cancel_req_event in cancel_req_event_details %}
+            <div class="row" style="height: 150px; border: solid 2px rebeccapurple; padding: 10px;border-radius: 10px;margin-top: 10px;">
+                
+                    <div class="col-12">
+                         <label class="modified_label">Event ID: {{cancel_req_event.event_id}}</label>
+                    </div>
+
+                    <div class="row" style="padding-left: 50px;">
+                        <a href="{% url 'view-event-details' cancel_req_event.event_id %}" target="_blank"><button class="btn confer-btn ml-2">VIEW DETAILS <i class="zmdi zmdi-eye"></i></button></a>
+
+                        <a target="_blank"><button class="btn confer-btn ml-2" onclick="approveCancelReqFn('true',{{cancel_req_event.id}})">APPROVE REQUEST <i class="zmdi zmdi-assignment-check"></i></button></a>
+
+                        <a target="_blank"><button class="btn confer-btn ml-2" onclick="approveCancelReqFn('false',{{cancel_req_event.id}})">CANCEL REQUEST <i class="zmdi zmdi-close-circle"></i></button></a>
+                       
+                    </div>
+                  
+
+
+            </div>
+            {% endfor %}
+            <!-- ends here ~ list of upcoming events -->
+
+
+        </div>
+        <!-- ends here ~ section stats -->
+
+    </section>
+
+
+{% endblock content %}
+
+{% block extra_js %}
+<script src="{% static '/controller/common/common-regex.js' %}"></script>
+<script src="{% static '/controller/common/web-common.js' %}"></script>
+<script type="text/javascript">
+    function approveCancelReqFn(descision,ticket_id) {
+        let approveCancelReq;
+        if(descision == 'true') {
+            approveCancelReq = true
+        } else {
+            approveCancelReq = false;
+        }
+
+        // ajax call to request OTP
+        let ajaxData = {'approve_cancel_req':approveCancelReq,'ticket_id':ticket_id};
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: `/organizer/ticket-cancel-req`,
+            data: JSON.stringify(ajaxData),
+            success: function(resp) {
+                // $("#global-loading-modal").hide('modal');
+                let response = resp;
+                // code block works if responseType is success
+                if(response.responseType == 'success') {
+                    if(response.messageType == 'success') {
+                        toastr.success(response.message,'Success');
+                        if(response.isRedirectNext == true) {
+                            window.location.href = response.nextPageUrl;
+                        }
+                    } else if(response.messageType == 'error') {
+                        toastr.error(response.message,'Error');
+                    } else if(response.messageType == 'info') {
+                        toastr.info(response.message,'Info');
+                    }
+                }
+                // ends here ~ code block works if responseType is success
+            }
+        });
+        // ends here ~ ajax call to request OTP
+    }
+</script>
+{% endblock extra_js %}

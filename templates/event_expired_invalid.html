@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+{% block headernav %}
+{% endblock %}
+{% block footer %}
+{% endblock %}
+{% block title %}
+    <title>EVENT DETAILS</title>
+{% endblock title %}
+
+{% block breadcrumb %}
+
+
+{% endblock breadcrumb %}
+
+{% block content %}
+    <h1 style="font-family: fantasy; text-align: center; color: #17a2b8; padding: 30px;">BROKEN EVENT EXPIRED LINK</h1>
+    <img class="img-responsive" src="{% static '/assets/img/site-img/error-404.png' %}" style="height: 450px; margin: auto; display: block;" />
+{% endblock content %}
+
+{% block extra_js %}
+<script src="{% static '/controller/common/common-regex.js' %}"></script>
+<script src="{% static '/controller/common/web-common.js' %}"></script>
+{% endblock extra_js %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+{% block headernav %}
+{% endblock %}
+{% block footer %}
+{% endblock %}
+{% block title %}
+    <title>Payment Failed | Event Management</title>
+{% endblock title %}
+
+{% block breadcrumb %}
+{% endblock breadcrumb %}
+
+<!-- extra css block -->
+{% block extracss %}
+    <style type="text/css">
+        body {
+            background: #6670e4;
+            color: #fff;
+            font-family: monospace;
+        }
+        .thankYouImg {
+            max-width: 200px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+{% endblock extracss %}
+<!-- ends here ~ extra css block  -->
+
+<!-- block for content -->
+{% block content %}
+    <img src="{% static '/assets/img/site-img/sorry_gif_01.gif' %}" class="thankYouImg responseive" />  
+    <div class="col-md-12" style="text-align: center;">  
+        <h1>SORRY! Unfornatelty, Your Payment is Failed</h1>
+        <h1>Please Try Again Later!!!</h1>
+    </div>
+
+{% endblock %}
+<!-- ends here ~ block for content -->
+
+{% block extra_js %}
+    <script type="text/javascript">
+        browser.history.deleteAll()
+    </script>
+{% endblock %}

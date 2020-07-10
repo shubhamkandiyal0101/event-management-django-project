@@ -1,0 +1,256 @@
+{% extends "organizer_base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>Update Event Image | Organizer Dashboard</title>
+{% endblock title %}
+
+
+
+{% block extracss %}
+    <link rel="stylesheet" href="{% static '/assets/css/croppie.css' %}">
+    <style type="text/css">
+        a.btn-upload {
+            background-color: #007bff;
+            color: white !important;
+            padding: 10px 15px;
+            border-radius: 3px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            text-shadow: none;
+            display: inline-block;
+            cursor: pointer;
+        }
+        input[type="file"] {
+            cursor: pointer;
+        }
+      
+        .file-btn {
+            position: relative;
+        }
+        .file-btn input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+        }
+
+
+        .upload-demo .upload-demo-wrap,
+        .upload-demo .upload-result,
+        .upload-demo.ready .upload-msg {
+            display: none;
+        }
+        .upload-demo.ready .upload-demo-wrap {
+            display: block;
+        }
+        .upload-demo.ready .upload-result {
+            display: inline-block;    
+        }
+        .upload-demo-wrap {
+            width: 260px;
+            height: 260px;
+            margin: 0 auto;
+        }
+
+        .upload-msg {
+            text-align: center;
+            padding: 50px;
+            font-size: 22px;
+            color: #aaa;
+            width: 260px;
+            margin: 50px auto;
+            border: 1px solid #aaa;
+        }
+    </style>
+{% endblock extracss %}
+
+{% block breadcrumb_heading1 %}
+    UPDATE EVENT IMAGE
+{% endblock breadcrumb_heading1 %}
+
+{% block breadcrumb_heading2 %}
+    UPDATE EVENT IMAGE
+{% endblock breadcrumb_heading2 %}
+
+{% block content %}
+
+
+    <section class="contact--us-area section-padding-20-80">
+
+        <!-- UPDATE EVENT IMAGE -->
+        <div class="container mt-5">
+            <div class="row">
+                <h2>UPDATE EVENT IMAGE <i class="zmdi zmdi-camera"></i> </h2>
+            </div>
+
+            <!-- block for show list of all element -->
+            <div class="demo-wrap upload-demo">
+                  <div class="row">
+                     <div class="col-6">
+                       <div class="actions mb-5">
+                           <a class="btn-upload file-btn">
+                           <span>CHOOSE FILE</span>
+                           <input type="file" id="upload" value="Choose a file" accept="image/*" />
+                           </a>
+                           <button class="upload-result btn btn-primary">CROP IMAGE</button>
+                        </div>
+
+                        <div class="upload-msg">
+                           Please Select New File to Update Event Image
+                        </div>
+                        <div class="upload-demo-wrap">
+                           <div id="upload-demo"></div>
+                        </div>
+                     </div>
+
+                     <div class="col-md-6" id="showDivImg" style="display: none; border-left: solid; padding-left: 140px;">
+                         <h2>Final Cropped Image</h2>
+                         <div id="eventImageResult" style="padding-top: 30px;"></div>
+                         <button class="btn btn-success mt-2" onclick="uploadImgFn('{{event_id}}')">UPLOAD IMAGE</button>
+                     </div>
+
+               </div>
+            </div>
+            <!-- ends here ~ block for show list of all element -->
+
+        </div>
+        <!-- ends here ~ UPDATE EVENT IMAGE -->
+
+    </section>
+
+
+{% endblock content %}
+
+
+<!-- extra js block -->
+{% block extra_js %}
+
+
+   <script src="{% static '/controller/common/common-regex.js' %}"></script>
+   <script src="{% static '/controller/common/web-common.js' %}"></script>
+   <script src="{% static '/assets/js/croppie.js' %}"></script>
+
+   <script type="text/javascript">
+
+    // function for upload image
+    function uploadImgFn(event_id) {
+    
+        ajaxData = {'image_base_64':imageFileInfo}
+        console.log(ajaxData)
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: `/organizer/update-event-img/${event_id}`,
+            data: JSON.stringify(ajaxData),
+            success: function(resp) {
+                // $('#show-loading-modal').modal('hide');
+                let response = resp;
+                // code block works if responseType is success
+                if(response.responseType == 'success') {
+                    if(response.messageType == 'success') {
+                        // show sweetAlert box
+                        Swal.fire({
+                          icon: 'success',
+                          title: response.message,
+                          showConfirmButton: true,
+                        })
+                        // ends here ~ show sweetAlert box
+                        // toastr.success(response.message,'Success');
+                        if(response.isRedirectNext == true) {
+                            window.location.href = response.nextPageUrl;
+                        }
+                    } else if(response.messageType == 'error') {
+                        // show sweetAlert box
+                        Swal.fire({
+                          icon: 'error',
+                          title: response.message,
+                          showConfirmButton: true,
+                        })
+                        // ends here ~ show sweetAlert box
+                        // toastr.error(response.message,'Error');
+                    }
+                }
+                // ends here ~ code block works if responseType is success
+            }
+        });
+
+
+    }
+    // ends here ~ function for upload image
+
+
+       
+       function cropEventImgFn() {
+        var $uploadCrop;
+
+        function readFile(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                
+                reader.onload = function (e) {
+
+                    $('.upload-demo').addClass('ready');
+                    $uploadCrop.croppie('bind', {
+                        url: e.target.result
+                    }).then(function(){
+                        console.log('jQuery bind complete');
+                    });
+                    
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+            else {
+                swal("Sorry - you're browser doesn't support the FileReader API");
+            }
+        }
+
+        $uploadCrop = $('#upload-demo').croppie({
+            viewport: {
+                width: 250,
+                height: 250,
+                type: 'square'
+            },
+            enableExif: true
+        });
+
+        $('#upload').on('change', function () { readFile(this); });
+        $('.upload-result').on('click', function (ev) {
+            $uploadCrop.croppie('result', {
+                type: 'canvas',
+                size: 'viewport'
+            }).then(function (resp) {
+                popupResult({
+                    src: resp
+                });
+            });
+        });
+    }
+
+    var imageFileInfo;
+    function popupResult(result) {
+        var imgHtml;
+        if (result.html) {
+            imgHtml = result.html;
+        }
+        if (result.src) {
+            imgHtml = '<img src="' + result.src + '" />';
+            $("#showDivImg").show()
+            $("#eventImageResult").html(imgHtml);
+            imageFileInfo = result.src;
+        }
+        
+    }
+
+    cropEventImgFn()
+   </script>
+
+
+{% endblock extra_js %}
+<!-- ends here ~ extra js block -->
+

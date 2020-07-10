@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+{% block headernav %}
+{% endblock %}
+{% block footer %}
+{% endblock %}
+{% block title %}
+    <title>THANK YOU | Event Management</title>
+{% endblock title %}
+
+{% block breadcrumb %}
+{% endblock breadcrumb %}
+
+<!-- extra css block -->
+{% block extracss %}
+    <style type="text/css">
+        body {
+            background: #bf66e4;
+            color: #fff;
+        }
+        .thankYouImg {
+            max-width: 200px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+{% endblock extracss %}
+<!-- ends here ~ extra css block  -->
+
+<!-- block for content -->
+{% block content %}
+    <img src="{% static '/assets/img/site-img/thank_you_bird.png' %}" class="thankYouImg responseive" />  
+    <div class="col-md-12" style="text-align: center;">  
+        <h2>Thank You for Purchasing Tickets</h2>
+        <table class="table table-striped table-bordered mt-4">
+            <tr>
+                <th>Payment ID</th>
+                <td>{{paymentId}}</td>
+            </tr>
+            <tr>
+                <th>Purchase Date</th>
+                <td>{{purchaseDate}}</td>
+            </tr>
+            <tr>
+                <th>Amount Paid</th>
+                <td>{{amountPaid}}</td>
+            </tr>
+        </table>
+        <h2>Please Check Your Email for More Info</h2>
+    </div>
+    <img src="{% static '/assets/img/site-img/thank_you.gif' %}" class="thankYouImg responseive" />    
+
+{% endblock %}
+<!-- ends here ~ block for content -->
+
+{% block extra_js %}
+    <script type="text/javascript">
+        browser.history.deleteAll()
+    </script>
+{% endblock %}

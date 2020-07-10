@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>USER SIGNUP</title>
+{% endblock title %}
+
+{% block breadcrumb %}
+
+    <!-- Breadcrumb Area Start -->
+    <section class="breadcrumb-area bg-img bg-gradient-overlay jarallax" style="background-image: url(img/bg-img/37.jpg);">
+        <div class="container h-100">
+            <div class="row h-100 align-items-center">
+                <div class="col-12">
+                    <div class="breadcrumb-content">
+                        <h2 class="page-title">Sign Up</h2>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Sign Up</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Breadcrumb Area End -->
+
+{% endblock breadcrumb %}
+
+{% block content %}
+
+    <!-- Contact Us Area Start -->
+    <section class="contact--us-area section-padding-100-0">
+        <div class="container">
+            <div class="row">
+                
+                <div class="col-12">
+                    
+                    <!-- sign up -->
+                     <form id="user_signup" style="padding: 10px 100px 100px 100px;" autocomplete="off">
+                        <div class="contact_input_area">
+                            <!-- Form Group -->
+                            <div class="row">
+                                <div class="form-group col-12 col-lg-6">
+                                    <input type="text" class="form-control mb-30" name="first_name"  placeholder="First Name" required>
+                                    <div></div>
+                                </div>
+                                
+                                <!-- Form Group -->
+                                
+                                <div class="form-group col-12 col-lg-6">
+                                    <input type="text" class="form-control mb-30" name="last_name" placeholder="Last Name" required>
+                                    <div></div>
+                                </div>
+                                
+                                <!-- Form Group -->
+
+                                <div class="form-group col-12">
+                                    <input type="email" class="form-control mb-30" name="email" id="email" placeholder="E-mail" required>
+                                    <div></div>
+
+                                </div>
+
+                                <!-- Form Group -->
+
+                                <div class="form-group col-12 col-lg-6">
+                                    <input type="password" class="form-control mb-30" name="password" placeholder="Password">
+                                    <div></div>
+                                </div>
+
+                                <!-- Form Group -->
+                                <div class="form-group col-12 col-lg-6">
+                                    <select class="form-control mb-30" name="is_staff">
+                                        <option value=""> -- SIGNUP USER TYPE -- </option>
+                                        <option value="true">SIGNUP AS ORGRANIZER</option>
+                                        <option value="false">SIGNUP FOR BOOK EVENT</option>
+                                    </select>
+                                     <div></div>
+                                </div>
+
+                                 <!-- Form Group -->
+
+                                <div class="form-group col-12 col-lg-6">
+                                    <input type="text" class="form-control mb-30" name="otp" placeholder="Verification Code" required>
+                                     <div></div>
+                                </div>
+
+
+                                 <!-- Form Group -->
+
+                                <div class="form-group col-12 col-lg-6">
+                                    <span class="btn confer-btn" onclick="reqActivateAccEmail()">GENERATE EMAIL VERIFICATION CODE <i class="zmdi zmdi-email"></i></span>
+                                </div>
+
+                               
+                                <!-- Button -->
+                                <div class="col-12">
+                                    <span type="submit" class="btn confer-btn" onclick="signupUser()">REGISTER <i class="zmdi zmdi-long-arrow-right"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- ends here ~ sign up -->
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+    <!-- Contact Us Area End -->
+
+{% endblock content %}
+
+{% block extra_js %}
+<script src="{% static '/controller/common/common-regex.js' %}"></script>
+<script src="{% static '/controller/common/web-common.js' %}"></script>
+<script type="text/javascript" src="{% static 'controller/signup.js' %}"></script>
+{% endblock extra_js %}

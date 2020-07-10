@@ -1,0 +1,35 @@
+.has_error {
+	color: red;
+    margin-top: -22px;
+}
+.form-group .form-control {
+	text-transform: unset !important;
+}
+label.modified_label {
+	text-transform: uppercase;
+    font-family: "Courier New", Courier, monospace;
+    font-size: 15px;
+    font-weight: 700;
+    color: #505add;
+}
+.custom_has_error {
+    /*background: #ff5722e3;*/
+    color: red;
+    /*border-radius: 5px;*/
+    margin-top: 5px;
+    font-size: 15.5px;
+    /*font-family: initial;
+    font-weight: bold;
+    padding: 5px;*/
+}
+
+.event_list_row {
+    height: 280px;
+    border: solid 2px rebeccapurple;
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+.event_list_img {
+    height: 200px;
+}
